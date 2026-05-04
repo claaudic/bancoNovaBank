@@ -34,10 +34,10 @@ public class Cliente {
     private String emailCliente;
 
     @Column(nullable = false)
-    private LocalDateTime fechaCreacion;
+    private LocalDateTime fechaCreacion = LocalDateTime.now();
 
     @Column(nullable = false)
-    private Estado estado;
+    private Estado estado = Estado.ACTIVO;
 
     // uno a muchos, quiere decir que un cliente puede tener muchas direcciones
     @OneToMany(mappedBy = "cliente")
