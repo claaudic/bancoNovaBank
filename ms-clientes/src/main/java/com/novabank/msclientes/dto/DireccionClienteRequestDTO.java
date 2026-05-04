@@ -3,9 +3,13 @@ package com.novabank.msclientes.dto;
 import com.novabank.msclientes.model.Cliente;
 import com.novabank.msclientes.model.DireccionCliente;
 import com.novabank.msclientes.model.TipoDireccion;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class DireccionClienteRequestDTO {
 
     private String calle;

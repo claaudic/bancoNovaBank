@@ -1,16 +1,19 @@
 package com.novabank.msclientes.dto;
 
 import com.novabank.msclientes.model.Cliente;
-import com.novabank.msclientes.model.Profesion;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.util.List;
 
 //Datos de entrada
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 public class ClienteRequestDTO {
 
     @NotBlank
