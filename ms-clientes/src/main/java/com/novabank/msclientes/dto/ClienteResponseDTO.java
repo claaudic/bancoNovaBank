@@ -1,6 +1,7 @@
 package com.novabank.msclientes.dto;
 
 import com.novabank.msclientes.model.Cliente;
+import com.novabank.msclientes.model.Estado;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -21,7 +22,7 @@ public class ClienteResponseDTO {
     private String telefonoCliente;
     private String emailCliente;
     private LocalDateTime fechaCreacion;
-    private Integer estado;
+    private Estado estado;
 
     private ProfesionResponseDTO profesion;
     private List<DireccionClienteResponseDTO> direcciones;
@@ -35,6 +36,7 @@ public class ClienteResponseDTO {
         response.setTelefonoCliente(cliente.getTelefonoCliente());
         response.setEmailCliente(cliente.getEmailCliente());
         response.setFechaCreacion(cliente.getFechaCreacion());
+        response.setEstado(cliente.getEstado());
         response.setProfesion(ProfesionResponseDTO.toProfesionResponseDTO(cliente.getProfesion()));
         response.setDirecciones(cliente.getDireccionClientes().stream().map(DireccionClienteResponseDTO::toDireccionClienteResponseDTO).toList());
 

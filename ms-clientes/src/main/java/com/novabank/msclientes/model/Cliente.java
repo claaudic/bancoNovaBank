@@ -39,8 +39,8 @@ public class Cliente {
     @Column(nullable = false)
     private Estado estado = Estado.ACTIVO;
 
-    // uno a muchos, quiere decir que un cliente puede tener muchas direcciones
-    @OneToMany(mappedBy = "cliente")
+    @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OrderBy("id ASC")
     private List<DireccionCliente> direccionClientes;
 
     // muchos a uno, quiere decir que un cliente solo puede tener una profesion
