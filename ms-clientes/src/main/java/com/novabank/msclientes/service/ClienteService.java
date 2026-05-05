@@ -44,6 +44,8 @@ public class ClienteService {
                 .map(DireccionClienteRequestDTO::toEntity)
                 .toList();
 
+        direcciones.forEach(direccion -> direccion.setCliente(cliente));
+
         cliente.setDireccionClientes(direcciones);
 
         Cliente guardado = clienteRepository.save(cliente);
