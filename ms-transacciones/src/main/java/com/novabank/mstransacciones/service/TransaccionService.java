@@ -30,9 +30,10 @@ public class TransaccionService {
         return transaccionRepository.findById(id).map(this::mapToDTO);
     }
 
-    public void guardarTransaccion(TransaccionRequestDTO transaccionEntrada){
+    public TransaccionResponseDTO guardarTransaccion(TransaccionRequestDTO transaccionEntrada){
         Transaccion transaccion = transaccionEntrada.transaccionEntity();
-        transaccionRepository.save(transaccion);
+        Transaccion guardada = transaccionRepository.save(transaccion);
+        return TransaccionResponseDTO.toResponseDTO(guardada);
     }
 
     public TransaccionResponseDTO actualizarTransaccion(Long idTransaccion, TransaccionRequestDTO TransaccionNueva){
