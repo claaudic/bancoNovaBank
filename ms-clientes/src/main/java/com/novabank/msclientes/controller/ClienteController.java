@@ -32,9 +32,9 @@ public class ClienteController {
     }
 
     @PostMapping
-    public ResponseEntity<ClienteResponseDTO> guardarCliente(
+    public ResponseEntity<ClienteResponseDTO> crearCliente(
             @Valid @RequestBody ClienteRequestDTO dtoCliente) {
-      return ResponseEntity.status(201).body(clienteService.guardarCliente(dtoCliente));
+      return ResponseEntity.status(201).body(clienteService.crearCliente(dtoCliente));
     }
 
     @PutMapping("/{rutCliente}")
