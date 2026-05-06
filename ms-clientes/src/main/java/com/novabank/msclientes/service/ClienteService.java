@@ -23,7 +23,7 @@ public class ClienteService {
     private final ClienteRepository clienteRepository;
     private final ProfesionRepository profesionRepository;
 
-    public ClienteResponseDTO guardarCliente(ClienteRequestDTO clienteEntrada) {
+    public ClienteResponseDTO crearCliente(ClienteRequestDTO clienteEntrada) {
 
         Cliente cliente = clienteEntrada.toEntity();
 
