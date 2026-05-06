@@ -4,6 +4,7 @@ import com.novabank.mstransacciones.dto.TransaccionRequestDTO;
 import com.novabank.mstransacciones.dto.TransaccionResponseDTO;
 import com.novabank.mstransacciones.service.TransaccionService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,36 +13,49 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/transacciones")
+@RequiredArgsConstructor
 public class TransaccionController {
 
     private final TransaccionService transaccionService;
 
-    public TransaccionController(TransaccionService transaccionService){
-        this.transaccionService = transaccionService;
+
+    @GetMapping
+    public ResponseEntity<List<TransaccionResponseDTO>> obtenerTransacciones(){
+        return ResponseEntity.ok(transaccionService.obtenerTransacciones());
+    }
+
+    @GetMapping("/{idTransaccion}")
+    public ResponseEntity<TransaccionResponseDTO> obtenerTransaccionPorId(
+            @PathVariable Long idTransaccion) {
+
+        return ResponseEntity.ok(
+                transaccionService.obtenerTransaccionPorId(idTransaccion)
+        );
     }
 
     @PostMapping
     public ResponseEntity<TransaccionResponseDTO> crearTransaccion(@Valid @RequestBody TransaccionRequestDTO requestDTO){
-        TransaccionResponseDTO transaccionGuardada = transaccionService.guardarTransaccion(requestDTO);
+        TransaccionResponseDTO transaccionGuardada = transaccionService.crearTransaccion(requestDTO);
 
         return new ResponseEntity<>(transaccionGuardada, HttpStatus.CREATED);
     }
+    @PutMapping("/{idTransaccion}")
+    public ResponseEntity<TransaccionResponseDTO> actualizarTransaccion(
+            @PathVariable Long idTransaccion,
+            @Valid @RequestBody TransaccionRequestDTO dto) {
 
-    @GetMapping
-    public ResponseEntity<List<TransaccionResponseDTO>> obtenerTodas(){
-        return ResponseEntity.ok(transaccionService.obtenerTodosTransaccion());
+        return ResponseEntity.ok(
+                transaccionService.actualizarTransaccion(idTransaccion, dto)
+        );
+    }
+    @DeleteMapping("/{idTransaccion}")
+    public ResponseEntity<Void> eliminarTransaccion(
+            @PathVariable Long idTransaccion) {
+
+        transaccionService.eliminarTransaccion(idTransaccion);
+
+        return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<TransaccionResponseDTO> obtenerPorId(@PathVariable Long id){
 
-        return transaccionService.obtenerPorIdTransaccion(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    @PutMapping("/{id}")
-    public ResponseEntity<TransaccionResponseDTO> actualizar(@PathVariable Long id, @RequestBody TransaccionRequestDTO dto){
-        return ResponseEntity.ok(transaccionService.actualizarTransaccion(id, dto));
-    }
 }

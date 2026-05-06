@@ -18,10 +18,10 @@ public class Transaccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTransaccion;
 
-    @Column(unique = true,nullable = false, length = 12)
+    @Column(unique = true)
     private Long idCuentaOrigen;
 
-    @Column(unique = true,nullable = false, length = 12)
+    @Column(unique = true)
     private Long idCuentaDestino;
 
     @Column(nullable = false, length = 13)
