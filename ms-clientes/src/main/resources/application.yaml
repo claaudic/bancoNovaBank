@@ -16,3 +16,6 @@ spring:
     locations: classpath:db/migration
     baseline-on-migrate: true
     default-schema: novabank-clientes
+
+server:
+  port: 8080

@@ -1,6 +1,7 @@
-package com.novabank.msclientes.exception;
+package com.novabank.mstransacciones.exception;
 
-import com.novabank.msclientes.dto.response.ErrorResponse;
+import com.novabank.mstransacciones.dto.response.ErrorResponse;
+import feign.FeignException;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 @RestControllerAdvice
 @Slf4j
-public class GlobalException {
+public class GlobalExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorResponse> handleValidation(
@@ -38,8 +39,6 @@ public class GlobalException {
             HttpServletRequest request) {
 
         String mensaje = "Parametro '" + ex.getName() + "' tiene formato invalido";
-        log.warn("Type mismatch en {}: {}", request.getRequestURI(), mensaje);
-
         return ResponseEntity.badRequest()
                 .body(ErrorResponse.of(400, "Bad Request", mensaje, request.getRequestURI()));
     }
@@ -55,17 +54,6 @@ public class GlobalException {
                 .body(ErrorResponse.of(404, "Not Found", ex.getMessage(), request.getRequestURI()));
     }
 
-    @ExceptionHandler(DuplicateResourceException.class)
-    public ResponseEntity<ErrorResponse> handleDuplicate(
-            DuplicateResourceException ex,
-            HttpServletRequest request) {
-
-        log.warn("Recurso duplicado: {}", ex.getMessage());
-
-        return ResponseEntity.status(HttpStatus.CONFLICT)
-                .body(ErrorResponse.of(409, "Conflict", ex.getMessage(), request.getRequestURI()));
-    }
-
     @ExceptionHandler(BusinessRuleException.class)
     public ResponseEntity<ErrorResponse> handleBusinessRule(
             BusinessRuleException ex,
@@ -75,6 +63,41 @@ public class GlobalException {
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(ErrorResponse.of(400, "Bad Request", ex.getMessage(), request.getRequestURI()));
+    }
+
+    @ExceptionHandler(RemoteServiceException.class)
+    public ResponseEntity<ErrorResponse> handleRemoteService(
+            RemoteServiceException ex,
+            HttpServletRequest request) {
+
+        log.error("Fallo en servicio remoto: {}", ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ErrorResponse.of(503, "Service Unavailable", ex.getMessage(), request.getRequestURI()));
+    }
+
+    @ExceptionHandler(FeignException.NotFound.class)
+    public ResponseEntity<ErrorResponse> handleFeignNotFound(
+            FeignException.NotFound ex,
+            HttpServletRequest request) {
+
+        log.warn("Recurso no encontrado en ms-cuentas");
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(ErrorResponse.of(400, "Bad Request",
+                        "Cuenta no encontrada en ms-cuentas", request.getRequestURI()));
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<ErrorResponse> handleFeign(
+            FeignException ex,
+            HttpServletRequest request) {
+
+        log.error("Error invocando ms-cuentas: status={}", ex.status());
+
+        return ResponseEntity.status(HttpStatus.SERVICE_UNAVAILABLE)
+                .body(ErrorResponse.of(503, "Service Unavailable",
+                        "ms-cuentas no disponible", request.getRequestURI()));
     }
 
     @ExceptionHandler(Exception.class)

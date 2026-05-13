@@ -1,7 +1,7 @@
 package com.novabank.msclientes.controller;
 
-import com.novabank.msclientes.dto.ProfesionRequestDTO;
-import com.novabank.msclientes.dto.ProfesionResponseDTO;
+import com.novabank.msclientes.dto.request.ProfesionRequestDTO;
+import com.novabank.msclientes.dto.response.ProfesionResponseDTO;
 import com.novabank.msclientes.service.ProfesionService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +27,11 @@ public class ProfesionController {
     @GetMapping("/{id}")
     public ResponseEntity<ProfesionResponseDTO> obtenerPorId(@PathVariable Long id) {
         return ResponseEntity.ok(profesionService.obtenerPorId(id));
+    }
+
+    @GetMapping("/buscar")
+    public ResponseEntity<List<ProfesionResponseDTO>> buscarPorNombre(@RequestParam String nombre) {
+        return ResponseEntity.ok(profesionService.buscarPorNombre(nombre));
     }
 
     @PostMapping
