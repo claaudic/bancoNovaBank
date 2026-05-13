@@ -1,5 +1,5 @@
 package com.novabank.mstransacciones.model;
 
 public enum Estado {
-    PENDIENTE, COMPLETADA
+    PENDIENTE, COMPLETADA, RECHAZADA, REVERTIDA
 }
