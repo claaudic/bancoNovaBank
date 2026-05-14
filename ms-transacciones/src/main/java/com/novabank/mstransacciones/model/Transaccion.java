@@ -18,16 +18,17 @@ public class Transaccion {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idTransaccion;
 
-    @Column(unique = true,nullable = false, length = 12)
+    @Column(nullable = false)
     private Long idCuentaOrigen;
 
-    @Column(unique = true,nullable = false, length = 12)
+    @Column(nullable = false)
     private Long idCuentaDestino;
 
-    @Column(nullable = false, length = 13)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 15)
     private TipoTransaccion tipoTransaccion;
 
-    @Column(nullable = false, length = 7)
+    @Column(nullable = false, precision = 19, scale = 2)
     private BigDecimal montoTransaccion;
 
     @Column(nullable = false)
@@ -36,7 +37,8 @@ public class Transaccion {
     @Column(length = 35)
     private String descripcion;
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 15)
     private Estado estado;
 
 }
