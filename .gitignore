@@ -1,1 +1,41 @@
+### Maven build output ###
+target/
+build/
+
+### Maven wrapper ###
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/
 .idea/**
+*.iml
+*.iws
+*.ipr
+
+### Eclipse / VSCode ###
+.classpath
+.project
+.settings/
+.vscode/
+bin/
+
+### Mac OS ###
+.DS_Store
+
+### Logs ###
+*.log
+
+### Java compile output ###
+*.class
+
+### Editor backup ###
+*.bak
+*~
+
+### Spring Boot ###
+HELP.md
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
