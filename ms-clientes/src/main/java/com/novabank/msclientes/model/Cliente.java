@@ -36,14 +36,14 @@ public class Cliente {
     @Column(nullable = false)
     private LocalDateTime fechaCreacion = LocalDateTime.now();
 
-    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false, length = 15)
     private Estado estado = Estado.ACTIVO;
 
     @OneToMany(mappedBy = "cliente", cascade = CascadeType.ALL, orphanRemoval = true)
     @OrderBy("id ASC")
     private List<DireccionCliente> direccionClientes;
 
-    // muchos a uno, quiere decir que un cliente solo puede tener una profesion
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_profesion")
     private Profesion profesion;

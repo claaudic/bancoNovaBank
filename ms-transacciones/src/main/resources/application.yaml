@@ -1,3 +1,27 @@
 spring:
   application:
     name: ms-transacciones
+
+  datasource:
+    url: jdbc:postgresql://34.16.103.65:5432/postgres
+    username: panel-ciudadano-dev
+    password: F^TzfiihrKz^QHy`
+
+  jpa:
+    hibernate:
+      ddl-auto: none
+    properties:
+      hibernate:
+        default_schema: novabank-transacciones
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    default-schema: novabank-transacciones
+
+server:
+  port: 8082
+
+ms-cuentas:
+  url: http://localhost:8081
