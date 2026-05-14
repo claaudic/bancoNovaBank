@@ -1,6 +1,6 @@
 spring:
   application:
-    name: ms-transacciones
+    name: ms-cuentas
 
   datasource:
     url: jdbc:postgresql://34.16.103.65:5432/postgres
@@ -12,16 +12,16 @@ spring:
       ddl-auto: validate
     properties:
       hibernate:
-        default_schema: novabank-transacciones
+        default_schema: novabank-cuentas
 
   flyway:
     enabled: true
     locations: classpath:db/migration
     baseline-on-migrate: true
-    default-schema: novabank-transacciones
+    default-schema: novabank-cuentas
 
 server:
-  port: 8082
+  port: 8081
 
-ms-cuentas:
-  url: http://localhost:8081
+ms-clientes:
+  url: http://localhost:8080

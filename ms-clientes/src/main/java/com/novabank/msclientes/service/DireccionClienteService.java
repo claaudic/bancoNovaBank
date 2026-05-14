@@ -3,6 +3,7 @@ package com.novabank.msclientes.service;
 import com.novabank.msclientes.dto.request.DireccionClienteRequestDTO;
 import com.novabank.msclientes.dto.response.DireccionClienteResponseDTO;
 import com.novabank.msclientes.exception.BusinessRuleException;
+import com.novabank.msclientes.exception.DuplicateResourceException;
 import com.novabank.msclientes.exception.ResourceNotFoundException;
 import com.novabank.msclientes.model.Cliente;
 import com.novabank.msclientes.model.DireccionCliente;
@@ -32,6 +33,12 @@ public class DireccionClienteService {
 
         if (cliente.getEstado() == Estado.INACTIVO) {
             throw new BusinessRuleException("No se puede agregar direccion a un cliente inactivo");
+        }
+
+        if (direccionClienteRepository.existsByClienteRutClienteAndCalleAndNumeroAndDepta(
+                rutCliente, dto.getCalle(), dto.getNumero(), dto.getDepta())) {
+            throw new DuplicateResourceException(
+                    "El cliente ya tiene una direccion registrada con calle, numero y depto identicos");
         }
 
         DireccionCliente direccion = dto.toEntity();
