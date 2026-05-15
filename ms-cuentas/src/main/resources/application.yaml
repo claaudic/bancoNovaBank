@@ -25,3 +25,9 @@ server:
 
 ms-clientes:
   url: http://localhost:8080
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: ms-cuentas
+        url: /v3/api-docs
