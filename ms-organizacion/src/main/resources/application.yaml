@@ -1,3 +1,30 @@
 spring:
   application:
     name: ms-organizacion
+
+  datasource:
+    url: jdbc:postgresql://34.16.103.65:5432/postgres
+    username: panel-ciudadano-dev
+    password: F^TzfiihrKz^QHy`
+
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        default_schema: novabank-organizacion
+
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+    default-schema: novabank-organizacion
+
+server:
+  port: 8083
+
+springdoc:
+  swagger-ui:
+    urls:
+      - name: ms-organizacion
+        url: /v3/api-docs

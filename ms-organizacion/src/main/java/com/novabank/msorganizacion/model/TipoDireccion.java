@@ -1,5 +1,5 @@
 package com.novabank.msorganizacion.model;
 
 public enum TipoDireccion {
-    RESIDENCIAL, COMERCIAL
+    MATRIZ, SUCURSAL, OFICINA, BODEGA
 }
