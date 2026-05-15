@@ -15,4 +15,7 @@ public interface DireccionClienteRepository extends JpaRepository<DireccionClien
     List<DireccionCliente> findByCiudadIgnoreCase(String ciudad);
 
     List<DireccionCliente> findByTipoDireccion(TipoDireccion tipoDireccion);
+
+    boolean existsByClienteRutClienteAndCalleAndNumeroAndDepta(
+            String rutCliente, String calle, String numero, String depta);
 }
