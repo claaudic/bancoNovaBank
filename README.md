@@ -128,10 +128,6 @@ Formato:
 
 Ver [docs/DIAGRAMA-ENTIDAD-RELACION.md](docs/DIAGRAMA-ENTIDAD-RELACION.md) con el modelo relacional de los 4 microservicios.
 
-## Documentación extendida
-
-Ver [DOCUMENTACION.md](DOCUMENTACION.md) para detalle de entidades, reglas de negocio, validaciones, demostración paso a paso y guía de defensa oral.
-
 ## Estado actual
 
 Los 4 microservicios compilan correctamente y se ejecutan en local.
