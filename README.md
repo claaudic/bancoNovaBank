@@ -3,6 +3,11 @@
 Sistema bancario implementado con arquitectura de microservicios en Spring Boot.
 Proyecto académico de tercer semestre.
 
+## Integrantes — Grupo 3
+
+- Claudia Cardoza
+- Cristopher Camus
+
 ## Microservicios
 
 | Microservicio | Puerto | Responsabilidad |
