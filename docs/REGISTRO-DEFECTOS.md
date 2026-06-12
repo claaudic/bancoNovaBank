@@ -67,11 +67,16 @@ Historial de bugs encontrados y resueltos durante el desarrollo del proyecto.
 
 ## BUG-006 — Dependencias de test inexistentes en pom.xml
 
-- **Fecha:** 10/06/2026
+- **Fecha:** 10/06/2026 (aplicado por microservicio entre 10/06 y 12/06)
 - **Severidad:** Media
 - **Descripción:** Los `pom.xml` de los 4 microservicios tenían dependencias como `spring-boot-starter-data-jpa-test`, `spring-boot-starter-flyway-test`, `spring-boot-starter-validation-test`, `spring-boot-starter-webmvc-test` que NO EXISTEN en Spring Boot.
 - **Causa:** Error al copiar nombres de dependencias durante el setup inicial.
-- **Solución:** Reemplazar las dependencias inventadas por la única correcta `spring-boot-starter-test` que incluye JUnit 5, Mockito, AssertJ.
+- **Solución:** Reemplazar las dependencias inventadas por la única correcta `spring-boot-starter-test` que incluye JUnit 5, Mockito, AssertJ. Adicionalmente, se agregaron `net.datafaker:datafaker:2.4.2` y el plugin `org.jacoco:jacoco-maven-plugin:0.8.12` para soportar la generacion de datos de prueba y la medicion de cobertura.
+- **Microservicios afectados y corregidos:**
+  - ms-clientes (10/06/2026)
+  - ms-cuentas (10/06/2026)
+  - ms-transacciones (11/06/2026)
+  - ms-organizacion (12/06/2026)
 - **Estado:** Corregido
 
 ---
