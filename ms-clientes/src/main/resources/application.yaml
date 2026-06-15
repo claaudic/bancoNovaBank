@@ -1,4 +1,6 @@
 spring:
+  application:
+    name: ms-clientes
   datasource:
     url: jdbc:postgresql://34.16.103.65:5432/postgres
     username: panel-ciudadano-dev
@@ -25,3 +27,12 @@ springdoc:
     urls:
       - name: ms-clientes
         url: /v3/api-docs
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true

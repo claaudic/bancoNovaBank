@@ -1,0 +1,23 @@
+spring:
+  application:
+    name: ms-eureka
+
+server:
+  port: 8761
+
+eureka:
+  instance:
+    hostname: localhost
+  client:
+    # El servidor Eureka NO se registra a si mismo
+    register-with-eureka: false
+    # El servidor Eureka NO consulta su propio registro
+    fetch-registry: false
+    service-url:
+      defaultZone: http://${eureka.instance.hostname}:${server.port}/eureka/
+
+  server:
+    # Apaga el modo self-preservation para desarrollo (evita falsos positivos)
+    enable-self-preservation: false
+    # Limpia instancias muertas cada 5 segundos
+    eviction-interval-timer-in-ms: 5000
