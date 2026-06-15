@@ -4,7 +4,7 @@ spring:
   datasource:
     url: jdbc:postgresql://34.16.103.65:5432/postgres
     username: panel-ciudadano-dev
-    password: F^TzfiihrKz^QHy`
+    password: "F^TzfiihrKz^QHy`"
 
   jpa:
     hibernate:

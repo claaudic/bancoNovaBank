@@ -1,0 +1,60 @@
+spring:
+  application:
+    name: ms-gateway
+
+  cloud:
+    gateway:
+      server:
+        webflux:
+          # Permite que el Gateway descubra MS via Eureka usando lb://NOMBRE_SERVICIO
+          discovery:
+            locator:
+              enabled: true
+              lower-case-service-id: true
+          # Rutas explicitas (mas control que solo el discovery locator)
+          routes:
+            - id: ms-clientes
+              uri: lb://ms-clientes
+              predicates:
+                - Path=/clientes/**, /api/v1/clientes/**
+              filters:
+                - RewritePath=/clientes/(?<segment>.*), /api/v1/clientes/${segment}
+
+            - id: ms-cuentas
+              uri: lb://ms-cuentas
+              predicates:
+                - Path=/cuentas/**, /api/v1/cuentas/**, /api/v1/tarjetas/**, /api/v1/tipos-cuenta/**
+              filters:
+                - RewritePath=/cuentas/(?<segment>.*), /api/v1/cuentas/${segment}
+
+            - id: ms-transacciones
+              uri: lb://ms-transacciones
+              predicates:
+                - Path=/transacciones/**, /api/v1/transacciones/**
+              filters:
+                - RewritePath=/transacciones/(?<segment>.*), /api/v1/transacciones/${segment}
+
+            - id: ms-organizacion
+              uri: lb://ms-organizacion
+              predicates:
+                - Path=/organizacion/**, /api/v1/sucursales/**, /api/v1/ejecutivos/**, /api/v1/direcciones-sucursal/**
+              filters:
+                - RewritePath=/organizacion/(?<segment>.*), /api/v1/sucursales/${segment}
+
+server:
+  port: 8090
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    prefer-ip-address: true
+
+# Para ver mas detalle del enrutamiento en consola
+logging:
+  level:
+    org.springframework.cloud.gateway: INFO
+    reactor.netty.http.client: INFO
