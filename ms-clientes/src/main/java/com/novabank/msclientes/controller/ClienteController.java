@@ -16,6 +16,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/api/v1/clientes")
 @RequiredArgsConstructor
@@ -32,13 +35,21 @@ public class ClienteController {
     }
 
     @GetMapping("/{rutCliente}")
-    @Operation(summary = "Obtiene un cliente por su rut")
+    @Operation(summary = "Obtiene un cliente por su rut con enlaces HATEOAS")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Cliente encontrado"),
             @ApiResponse(responseCode = "404", description = "Cliente no encontrado")
     })
     public ResponseEntity<ClienteResponseDTO> obtenerCliente(@PathVariable String rutCliente) {
-        return ResponseEntity.ok(clienteService.obtenerClientePorRut(rutCliente));
+        ClienteResponseDTO dto = clienteService.obtenerClientePorRut(rutCliente);
+
+        dto.add(linkTo(methodOn(ClienteController.class).obtenerCliente(rutCliente)).withSelfRel());
+        dto.add(linkTo(methodOn(ClienteController.class).obtenerClientes()).withRel("todos-los-clientes"));
+        dto.add(linkTo(methodOn(ClienteController.class).activar(rutCliente)).withRel("activar"));
+        dto.add(linkTo(methodOn(ClienteController.class).desactivar(rutCliente)).withRel("desactivar"));
+        dto.add(linkTo(methodOn(ClienteController.class).eliminarCliente(rutCliente)).withRel("eliminar"));
+
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/estado/{estado}")

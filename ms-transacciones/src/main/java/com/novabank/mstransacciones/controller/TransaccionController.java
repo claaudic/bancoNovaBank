@@ -19,6 +19,9 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/api/v1/transacciones")
 @RequiredArgsConstructor
@@ -36,13 +39,20 @@ public class TransaccionController {
     }
 
     @GetMapping("/{idTransaccion}")
-    @Operation(summary = "Obtiene una transaccion por id")
+    @Operation(summary = "Obtiene una transaccion por id con enlaces HATEOAS")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Transaccion encontrada"),
             @ApiResponse(responseCode = "404", description = "Transaccion no encontrada")
     })
     public ResponseEntity<TransaccionResponseDTO> obtenerTransaccionPorId(@PathVariable Long idTransaccion) {
-        return ResponseEntity.ok(transaccionService.obtenerTransaccionPorId(idTransaccion));
+        TransaccionResponseDTO dto = transaccionService.obtenerTransaccionPorId(idTransaccion);
+
+        dto.add(linkTo(methodOn(TransaccionController.class).obtenerTransaccionPorId(idTransaccion)).withSelfRel());
+        dto.add(linkTo(methodOn(TransaccionController.class).obtenerTransacciones()).withRel("todas-las-transacciones"));
+        dto.add(linkTo(methodOn(TransaccionController.class).obtenerPorCuenta(dto.getIdCuentaOrigen())).withRel("transacciones-de-cuenta-origen"));
+        dto.add(linkTo(methodOn(TransaccionController.class).eliminarTransaccion(idTransaccion)).withRel("eliminar"));
+
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/cuenta/{idCuenta}")

@@ -136,9 +136,43 @@ Historial de bugs encontrados y resueltos durante el desarrollo del proyecto.
 
 ---
 
+## BUG-012 — Faltaba import estatico de anyLong() en CuentaServiceTest
+
+- **Fecha:** 10/06/2026
+- **Severidad:** Baja
+- **Descripción:** Al crear `CuentaServiceTest`, IntelliJ marcó tres errores `The method anyLong() is undefined for the type CuentaServiceTest`. El test no compilaba.
+- **Causa:** Faltaba la importacion estatica `import static org.mockito.ArgumentMatchers.anyLong;`. Solo estaban importados `any` y `anyString`.
+- **Solución:** Agregar la importacion estatica al inicio del archivo de test. Los tres errores se resolvieron al instante y los 17 tests pasaron.
+- **Estado:** Corregido
+
+---
+
+## BUG-013 — Contraseña de BD se borraba o no era leida por el parser YAML
+
+- **Fecha:** 14/06/2026
+- **Severidad:** Alta
+- **Descripción:** Al arrancar ms-clientes despues de modificar el `application.yaml` para agregar la configuracion de Eureka, el microservicio fallaba al conectar a PostgreSQL con el error `The server requested SCRAM-based authentication, but no password was provided`. Al inspeccionar el yaml, el campo `password:` aparecia vacio.
+- **Causa:** La contraseña original `F^TzfiihrKz^QHy``  contenia el caracter backtick al final. Al guardar el archivo desde IntelliJ, el parser YAML lo interpretaba como caracter especial y o lo eliminaba o lo cortaba. El valor literal no se preservaba sin comillas.
+- **Solución:** Envolver la contraseña entre comillas dobles en los 4 microservicios: `password: "F^TzfiihrKz^QHy`"`. Esto le indica a YAML que el valor es texto literal y debe leerlo tal cual, sin interpretar caracteres especiales.
+- **Lección aprendida:** Cualquier contraseña con caracteres como `` ` ``, `#`, `:`, `&`, `*` debe ir entre comillas en YAML.
+- **Estado:** Corregido
+
+---
+
+## BUG-014 — Gateway respondia 503 al primer minuto despues de arrancar
+
+- **Fecha:** 15/06/2026
+- **Severidad:** Media
+- **Descripción:** Al arrancar ms-gateway y hacer una peticion a `http://localhost:8090/clientes/{rut}` durante el primer minuto, el Gateway devolvia error `503 Service Unavailable - Unable to find instance for ms-clientes` aunque ms-clientes ya estaba registrado en Eureka.
+- **Causa:** Spring Cloud + Eureka tiene un cache interno de discovery que se refresca cada 30 segundos por defecto. Al arrancar el Gateway, su cache local aun no tenia la lista actualizada de microservicios registrados, aunque en el dashboard de Eureka si aparecieran.
+- **Solución:** Esperar 30-60 segundos despues de arrancar el Gateway antes de hacer peticiones. Confirmar en `http://localhost:8761` que ambos servicios esten `UP`. Alternativa: refrescar el navegador, el Gateway resuelve correctamente en la siguiente peticion una vez que su cache se actualiza.
+- **Estado:** Corregido (es comportamiento esperado del cache)
+
+---
+
 ## Bugs activos / Pendientes
 
-(Vacío — actualmente sin bugs abiertos. Se irán agregando los que aparezcan durante Sumativa 3.)
+(Vacío — actualmente sin bugs abiertos. Se irán agregando los que aparezcan durante el desarrollo de Sumativa 3.)
 
 ---
 
@@ -146,10 +180,10 @@ Historial de bugs encontrados y resueltos durante el desarrollo del proyecto.
 
 | Severidad | Total | Corregidos | Abiertos |
 |---|---|---|---|
-| Alta | 6 | 6 | 0 |
-| Media | 2 | 2 | 0 |
-| Baja | 3 | 3 | 0 |
-| **TOTAL** | **11** | **11** | **0** |
+| Alta | 7 | 7 | 0 |
+| Media | 3 | 3 | 0 |
+| Baja | 4 | 4 | 0 |
+| **TOTAL** | **14** | **14** | **0** |
 
 ---
 

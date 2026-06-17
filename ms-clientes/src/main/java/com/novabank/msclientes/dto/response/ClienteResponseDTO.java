@@ -3,8 +3,10 @@ package com.novabank.msclientes.dto.response;
 import com.novabank.msclientes.model.Cliente;
 import com.novabank.msclientes.model.Estado;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -12,7 +14,8 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ClienteResponseDTO {
+@EqualsAndHashCode(callSuper = false)
+public class ClienteResponseDTO extends RepresentationModel<ClienteResponseDTO> {
 
     private String rutCliente;
     private String numeroSerie;

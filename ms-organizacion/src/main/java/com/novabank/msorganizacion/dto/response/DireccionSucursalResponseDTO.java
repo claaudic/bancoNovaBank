@@ -4,12 +4,15 @@ import com.novabank.msorganizacion.model.DireccionSucursal;
 import com.novabank.msorganizacion.model.TipoDireccion;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class DireccionSucursalResponseDTO {
+@EqualsAndHashCode(callSuper = false)
+public class DireccionSucursalResponseDTO extends RepresentationModel<DireccionSucursalResponseDTO> {
 
     private Long idDireccion;
     private TipoDireccion tipoDireccion;

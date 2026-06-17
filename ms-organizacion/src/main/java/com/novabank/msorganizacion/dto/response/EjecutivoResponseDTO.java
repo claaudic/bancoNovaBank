@@ -4,14 +4,17 @@ import com.novabank.msorganizacion.model.Ejecutivo;
 import com.novabank.msorganizacion.model.Estado;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class EjecutivoResponseDTO {
+@EqualsAndHashCode(callSuper = false)
+public class EjecutivoResponseDTO extends RepresentationModel<EjecutivoResponseDTO> {
 
     private Long idEjecutivo;
     private String nombre;

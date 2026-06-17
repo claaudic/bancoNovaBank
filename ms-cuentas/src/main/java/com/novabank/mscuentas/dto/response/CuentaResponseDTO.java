@@ -4,7 +4,9 @@ import com.novabank.mscuentas.model.Cuenta;
 import com.novabank.mscuentas.model.EstadoCuenta;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -12,7 +14,8 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CuentaResponseDTO {
+@EqualsAndHashCode(callSuper = false)
+public class CuentaResponseDTO extends RepresentationModel<CuentaResponseDTO> {
 
     private Long idCuenta;
     private String numeroCuenta;

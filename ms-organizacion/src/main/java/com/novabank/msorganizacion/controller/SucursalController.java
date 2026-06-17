@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/api/v1/sucursales")
 @RequiredArgsConstructor
@@ -32,13 +35,21 @@ public class SucursalController {
     }
 
     @GetMapping("/{idSucursal}")
-    @Operation(summary = "Obtiene una sucursal por id")
+    @Operation(summary = "Obtiene una sucursal por id con enlaces HATEOAS a operaciones disponibles")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Sucursal encontrada"),
             @ApiResponse(responseCode = "404", description = "Sucursal no encontrada")
     })
     public ResponseEntity<SucursalResponseDTO> obtener(@PathVariable Long idSucursal) {
-        return ResponseEntity.ok(sucursalService.obtenerPorId(idSucursal));
+        SucursalResponseDTO dto = sucursalService.obtenerPorId(idSucursal);
+
+        dto.add(linkTo(methodOn(SucursalController.class).obtener(idSucursal)).withSelfRel());
+        dto.add(linkTo(methodOn(SucursalController.class).listar()).withRel("todas-las-sucursales"));
+        dto.add(linkTo(methodOn(SucursalController.class).activar(idSucursal)).withRel("activar"));
+        dto.add(linkTo(methodOn(SucursalController.class).desactivar(idSucursal)).withRel("desactivar"));
+        dto.add(linkTo(methodOn(SucursalController.class).eliminar(idSucursal)).withRel("eliminar"));
+
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/activas")

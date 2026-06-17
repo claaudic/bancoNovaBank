@@ -4,14 +4,17 @@ import com.novabank.msorganizacion.model.Estado;
 import com.novabank.msorganizacion.model.Sucursal;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SucursalResponseDTO {
+@EqualsAndHashCode(callSuper = false)
+public class SucursalResponseDTO extends RepresentationModel<SucursalResponseDTO> {
 
     private Long idSucursal;
     private String nombre;

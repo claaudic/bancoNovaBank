@@ -23,6 +23,9 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping("/api/v1/cuentas")
 @RequiredArgsConstructor
@@ -40,13 +43,22 @@ public class CuentaController {
     }
 
     @GetMapping("/{idCuenta}")
-    @Operation(summary = "Obtiene una cuenta por id")
+    @Operation(summary = "Obtiene una cuenta por id con enlaces HATEOAS a operaciones disponibles")
     @ApiResponses({
             @ApiResponse(responseCode = "200", description = "Cuenta encontrada"),
             @ApiResponse(responseCode = "404", description = "Cuenta no encontrada")
     })
     public ResponseEntity<CuentaResponseDTO> obtenerCuentaPorId(@PathVariable Long idCuenta) {
-        return ResponseEntity.ok(cuentaService.obtenerCuentaPorId(idCuenta));
+        CuentaResponseDTO dto = cuentaService.obtenerCuentaPorId(idCuenta);
+
+        dto.add(linkTo(methodOn(CuentaController.class).obtenerCuentaPorId(idCuenta)).withSelfRel());
+        dto.add(linkTo(methodOn(CuentaController.class).obtenerCuentas()).withRel("todas-las-cuentas"));
+        dto.add(linkTo(methodOn(CuentaController.class).depositar(idCuenta, null)).withRel("depositar"));
+        dto.add(linkTo(methodOn(CuentaController.class).retirar(idCuenta, null)).withRel("retirar"));
+        dto.add(linkTo(methodOn(CuentaController.class).bloquear(idCuenta)).withRel("bloquear"));
+        dto.add(linkTo(methodOn(CuentaController.class).activar(idCuenta)).withRel("activar"));
+
+        return ResponseEntity.ok(dto);
     }
 
     @GetMapping("/cliente/{rutCliente}")
