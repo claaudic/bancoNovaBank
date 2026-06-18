@@ -170,6 +170,29 @@ Historial de bugs encontrados y resueltos durante el desarrollo del proyecto.
 
 ---
 
+## BUG-015 — SpringDoc 2.7.0 incompatible con Spring Boot 4 al ejecutar en contenedor
+
+- **Fecha:** 17/06/2026
+- **Severidad:** Alta
+- **Descripción:** Al levantar los 4 microservicios de negocio con `docker-compose up`, los contenedores se caian al arrancar con el error `java.lang.ClassNotFoundException: org.springframework.boot.autoconfigure.hateoas.HateoasProperties`. La falla ocurria durante la creacion del bean `hateoasHalProvider` de la clase `SpringDocHateoasConfiguration`. Solo Eureka y Gateway quedaban arriba.
+- **Causa:** SpringDoc OpenAPI 2.7.0 referencia internamente la clase `HateoasProperties` que existia en `spring-boot-autoconfigure` 3.x pero fue removida o reubicada en Spring Boot 4. La incompatibilidad solo se manifestaba al ejecutar la app (no durante compilacion ni tests con mocks).
+- **Solución parcial:** Actualizar la version de `springdoc-openapi-starter-webmvc-ui` de 2.7.0 a 2.8.13 en los 4 microservicios. Esto no fue suficiente — el error persistio porque SpringDoc 2.8.13 mantiene la misma referencia a `HateoasProperties` por compatibilidad con Spring Boot 3.x.
+- **Estado:** Corregido en BUG-016
+
+---
+
+## BUG-016 — Integracion HATEOAS de SpringDoc seguia fallando aun con version actualizada
+
+- **Fecha:** 17/06/2026
+- **Severidad:** Alta
+- **Descripción:** Despues de subir SpringDoc a 2.8.13 (intento de fix de BUG-015), los microservicios seguian fallando al arrancar con el mismo error de `HateoasProperties` no encontrada. La clase `SpringDocHateoasConfiguration` se cargaba automaticamente por la presencia de Spring HATEOAS en el classpath.
+- **Causa:** La integracion automatica de SpringDoc con Spring HATEOAS detecta la presencia de la libreria `spring-hateoas` y activa `SpringDocHateoasConfiguration` aunque la propiedad `springdoc.hateoas.enabled` este en false (el nombre correcto de la propiedad era distinto).
+- **Solución:** Agregar la propiedad correcta `springdoc.enable-hateoas: false` en el `application.yaml` de los 4 microservicios. Esto desactiva la integracion de SpringDoc con HATEOAS, pero los enlaces `_links` siguen funcionando correctamente en las respuestas JSON — solo no se muestran de forma especial en la UI de Swagger (que es solo cosmetico).
+- **Lección aprendida:** Las propiedades de SpringDoc no siempre siguen el patron `springdoc.<modulo>.enabled`. En este caso era `springdoc.enable-hateoas` (con guion en `enable`). Documentar las propiedades exactas en futuros proyectos.
+- **Estado:** Corregido
+
+---
+
 ## Bugs activos / Pendientes
 
 (Vacío — actualmente sin bugs abiertos. Se irán agregando los que aparezcan durante el desarrollo de Sumativa 3.)
@@ -180,10 +203,10 @@ Historial de bugs encontrados y resueltos durante el desarrollo del proyecto.
 
 | Severidad | Total | Corregidos | Abiertos |
 |---|---|---|---|
-| Alta | 7 | 7 | 0 |
+| Alta | 9 | 9 | 0 |
 | Media | 3 | 3 | 0 |
 | Baja | 4 | 4 | 0 |
-| **TOTAL** | **14** | **14** | **0** |
+| **TOTAL** | **16** | **16** | **0** |
 
 ---
 

@@ -1,0 +1,143 @@
+# =============================================================
+# docker-compose.yml para Banco NovaBank
+#
+# Orquesta los 6 microservicios:
+#   - ms-eureka       (Service Discovery, puerto 8761)
+#   - ms-clientes     (puerto 8080)
+#   - ms-cuentas      (puerto 8081)
+#   - ms-transacciones (puerto 8082)
+#   - ms-organizacion (puerto 8083)
+#   - ms-gateway      (API Gateway, puerto 8090)
+#
+# Uso:
+#   docker-compose up --build       (levanta todo)
+#   docker-compose down             (apaga todo)
+#   docker-compose logs ms-clientes (ver logs de un MS)
+# =============================================================
+
+services:
+
+  # ============================================================
+  # ms-eureka - Service Discovery (se levanta primero)
+  # ============================================================
+  ms-eureka:
+    build:
+      context: ./ms-eureka
+      dockerfile: Dockerfile
+    container_name: ms-eureka
+    ports:
+      - "8761:8761"
+    networks:
+      - novabank-network
+    healthcheck:
+      test: ["CMD", "wget", "--spider", "-q", "http://localhost:8761/actuator/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ============================================================
+  # ms-clientes
+  # ============================================================
+  ms-clientes:
+    build:
+      context: ./ms-clientes
+      dockerfile: Dockerfile
+    container_name: ms-clientes
+    ports:
+      - "8080:8080"
+    environment:
+      # Sobrescribe la URL de Eureka para que apunte al contenedor
+      EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE: http://ms-eureka:8761/eureka/
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      - ms-eureka
+    networks:
+      - novabank-network
+
+  # ============================================================
+  # ms-cuentas
+  # ============================================================
+  ms-cuentas:
+    build:
+      context: ./ms-cuentas
+      dockerfile: Dockerfile
+    container_name: ms-cuentas
+    ports:
+      - "8081:8081"
+    environment:
+      EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE: http://ms-eureka:8761/eureka/
+      MS-CLIENTES_URL: http://ms-clientes:8080
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      - ms-eureka
+      - ms-clientes
+    networks:
+      - novabank-network
+
+  # ============================================================
+  # ms-transacciones
+  # ============================================================
+  ms-transacciones:
+    build:
+      context: ./ms-transacciones
+      dockerfile: Dockerfile
+    container_name: ms-transacciones
+    ports:
+      - "8082:8082"
+    environment:
+      EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE: http://ms-eureka:8761/eureka/
+      MS-CUENTAS_URL: http://ms-cuentas:8081
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      - ms-eureka
+      - ms-cuentas
+    networks:
+      - novabank-network
+
+  # ============================================================
+  # ms-organizacion
+  # ============================================================
+  ms-organizacion:
+    build:
+      context: ./ms-organizacion
+      dockerfile: Dockerfile
+    container_name: ms-organizacion
+    ports:
+      - "8083:8083"
+    environment:
+      EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE: http://ms-eureka:8761/eureka/
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      - ms-eureka
+    networks:
+      - novabank-network
+
+  # ============================================================
+  # ms-gateway - API Gateway (se levanta al final)
+  # ============================================================
+  ms-gateway:
+    build:
+      context: ./ms-gateway
+      dockerfile: Dockerfile
+    container_name: ms-gateway
+    ports:
+      - "8090:8090"
+    environment:
+      EUREKA_CLIENT_SERVICE-URL_DEFAULTZONE: http://ms-eureka:8761/eureka/
+      SPRING_PROFILES_ACTIVE: dev
+    depends_on:
+      - ms-eureka
+      - ms-clientes
+      - ms-cuentas
+      - ms-transacciones
+      - ms-organizacion
+    networks:
+      - novabank-network
+
+
+# =============================================================
+# Red interna donde se hablan los contenedores
+# =============================================================
+networks:
+  novabank-network:
+    driver: bridge

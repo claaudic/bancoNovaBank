@@ -29,6 +29,7 @@ ms-cuentas:
   url: http://localhost:8081
 
 springdoc:
+  enable-hateoas: false
   swagger-ui:
     urls:
       - name: ms-transacciones

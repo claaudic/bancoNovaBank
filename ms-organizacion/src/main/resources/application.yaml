@@ -26,6 +26,7 @@ server:
   port: 8083
 
 springdoc:
+  enable-hateoas: false
   swagger-ui:
     urls:
       - name: ms-organizacion
