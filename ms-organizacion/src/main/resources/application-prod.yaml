@@ -3,7 +3,13 @@ spring:
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
-  eureka:
-    client:
-      service-url:
-        defaultZone: ${EUREKA_URL}
+
+server:
+  port: ${PORT:8083}
+
+# En produccion (Render) ms-organizacion corre standalone, sin Eureka
+eureka:
+  client:
+    enabled: false
+    register-with-eureka: false
+    fetch-registry: false
