@@ -1,7 +1,7 @@
 # Banco NovaBank
 
 Sistema bancario distribuido implementado con arquitectura de microservicios en Spring Boot.
-Proyecto académico de tercer semestre — **Sumativa 3 (Cierre Técnico)**.
+Proyecto académico de tercer semestre — Sumativa 3 (Cierre Técnico).
 
 ## Integrantes — Grupo 3
 
