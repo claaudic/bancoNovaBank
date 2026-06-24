@@ -304,3 +304,4 @@ SPRING_PROFILES_ACTIVE=prod ./mvnw spring-boot:run
 ✅ API Gateway con enrutamiento configurado
 ✅ Perfiles dev/prod separados con variables de entorno
 ✅ Despliegue remoto en Render (ms-clientes y ms-organizacion)
+
